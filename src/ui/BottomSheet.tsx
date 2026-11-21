@@ -6,9 +6,10 @@ interface BottomSheetProps {
   title: string;
   onClose: () => void;
   children: ReactNode;
+  full?: boolean;
 }
 
-export function BottomSheet({ open, title, onClose, children }: BottomSheetProps) {
+export function BottomSheet({ open, title, onClose, children, full }: BottomSheetProps) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -27,7 +28,7 @@ export function BottomSheet({ open, title, onClose, children }: BottomSheetProps
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={`sheet ${visible ? 'open' : ''}`} role="dialog" aria-label={title}>
+      <div className={`sheet ${visible ? 'open' : ''} ${full ? 'full' : ''}`} role="dialog" aria-label={title}>
         <div className="sheet-head">
           <div className="sheet-handle" aria-hidden="true" />
           <span className="sheet-title">{title}</span>

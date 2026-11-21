@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useStore } from '../../store/useStore';
 import { Vec3 } from '../../core/types';
-import { classInfo, FONTS } from '../../core/classes';
+import { classInfo, FONTS, SCRIPT_CLASSES } from '../../core/classes';
 import { Icon } from '../../ui/Icons';
 import { BottomSheet } from '../../ui/BottomSheet';
 
@@ -35,7 +35,7 @@ function Vec3Editor({ value, step = 0.5, onChange }: { value: Vec3; step?: numbe
   );
 }
 
-export function Properties() {
+export function Properties({ onEditScript }: { onEditScript?: (id: string) => void }) {
   const project = useStore(s => s.project);
   const selection = useStore(s => s.selection);
   const setProperty = useStore(s => s.setProperty);
@@ -198,6 +198,11 @@ export function Properties() {
           </div>
         )}
         <div className="prop-actions">
+          {SCRIPT_CLASSES.includes(subject.className) && onEditScript && (
+            <button className="action" onClick={() => onEditScript(subject.id)}>
+              <Icon name="script" size={15} /> Editar código
+            </button>
+          )}
           <button className="action" onClick={() => duplicateInstances([subject.id])}>
             <Icon name="copy" size={15} /> Duplicar
           </button>

@@ -8,7 +8,9 @@ import { MobileNav, MobilePanel } from './MobileNav';
 import { Explorer } from './Explorer';
 import { Properties } from './Properties';
 import { InsertMenu } from './InsertMenu';
-import { ToolMode } from '../../core/types';
+import { ScriptArea } from '../scripting/ScriptArea';
+import { InstanceId, ToolMode } from '../../core/types';
+import { SCRIPT_CLASSES } from '../../core/classes';
 
 const TOOL_ICON: Record<ToolMode, string> = {
   select: 'cursor',
@@ -49,6 +51,47 @@ export function Studio({ onHome }: { onHome: () => void }) {
   const [insertParent, setInsertParent] = useState<string | null>(null);
   const [renameOpen, setRenameOpen] = useState(false);
   const [renameValue, setRenameValue] = useState('');
+  const [openScripts, setOpenScripts] = useState<InstanceId[]>([]);
+  const [activeScriptId, setActiveScriptId] = useState<InstanceId | null>(null);
+  const [centerView, setCenterView] = useState<'3d' | 'code'>('3d');
+
+  const openScript = (id: InstanceId) => {
+    setOpenScripts(prev => (prev.includes(id) ? prev : [...prev, id]));
+    setActiveScriptId(id);
+    setCenterView('code');
+    if (isMobile) setPanel('code');
+  };
+
+  const closeScript = (id: InstanceId) => {
+    setOpenScripts(prev => prev.filter(s => s !== id));
+    setActiveScriptId(prev => (prev === id ? openScripts.find(s => s !== id) ?? null : prev));
+  };
+
+  const scriptPicker = (onPick: (id: InstanceId) => void) => {
+    if (!project) return null;
+    const scripts = Object.values(project.instances).filter(i => SCRIPT_CLASSES.includes(i.className));
+    return (
+      <div className="actions-list">
+        {scripts.length === 0 && <p className="hint">Nenhum script no projeto. Use o Explorer para criar um Script, LocalScript ou ModuleScript.</p>}
+        {scripts.map(i => (
+          <button key={i.id} className="action" onClick={() => { onPick(i.id); setPanel(null); }}>
+            <Icon name="script" /> {i.name}<small>{i.className}</small>
+          </button>
+        ))}
+      </div>
+    );
+  };
+
+  const scriptArea = project ? (
+    <ScriptArea
+      project={project}
+      openScripts={openScripts}
+      activeScriptId={activeScriptId}
+      onSelectTab={setActiveScriptId}
+      onCloseTab={closeScript}
+      onOpenPicker={() => setPanel('pick-script')}
+    />
+  ) : null;
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -128,16 +171,39 @@ export function Studio({ onHome }: { onHome: () => void }) {
         {!isMobile && (
           <aside className="panel explorer-panel">
             <div className="panel-title"><Icon name="layers" size={15} /> Explorer</div>
-            <Explorer onInsert={pid => openInsert(pid)} />
+            <Explorer onInsert={pid => openInsert(pid)} onEditScript={openScript} />
           </aside>
         )}
 
-        <Viewport />
+        <div className="center-area">
+          <div className="center-tabs" role="tablist" aria-label="Área central">
+            <button
+              className={`center-tab ${centerView === '3d' ? 'active' : ''}`}
+              onClick={() => setCenterView('3d')}
+              role="tab"
+              aria-selected={centerView === '3d'}
+            >
+              <Icon name="eye" size={13} /> 3D
+            </button>
+            {openScripts.map(id => project?.instances[id] && (
+              <button
+                key={id}
+                className={`center-tab ${centerView === 'code' && activeScriptId === id ? 'active' : ''}`}
+                onClick={() => { setActiveScriptId(id); setCenterView('code'); }}
+                role="tab"
+                aria-selected={centerView === 'code' && activeScriptId === id}
+              >
+                <Icon name="script" size={13} /> {project.instances[id].name}
+              </button>
+            ))}
+          </div>
+          {centerView === '3d' ? <Viewport /> : scriptArea}
+        </div>
 
         {!isMobile && (
           <aside className="panel properties-panel">
             <div className="panel-title"><Icon name="sliders" size={15} /> Properties</div>
-            <Properties />
+            <Properties onEditScript={openScript} />
           </aside>
         )}
       </div>
@@ -162,8 +228,16 @@ export function Studio({ onHome }: { onHome: () => void }) {
           </BottomSheet>
           <BottomSheet open={panel === 'properties'} title="Properties" onClose={() => setPanel(null)}>
             <div className="sheet-tall">
-              <Properties />
+              <Properties onEditScript={openScript} />
             </div>
+          </BottomSheet>
+          <BottomSheet open={panel === 'code'} title="Código Luau" onClose={() => setPanel(null)} full>
+            <div className="sheet-tall code-sheet">
+              {scriptArea}
+            </div>
+          </BottomSheet>
+          <BottomSheet open={panel === 'pick-script'} title="Abrir script" onClose={() => setPanel(null)}>
+            {scriptPicker(openScript)}
           </BottomSheet>
           <BottomSheet open={panel === 'tools'} title="Ferramentas" onClose={() => setPanel(null)}>
             <div className="tools-grid">

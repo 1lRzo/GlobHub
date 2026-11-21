@@ -1,7 +1,7 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { useStore } from '../../store/useStore';
 import { RbxInstance, InstanceId } from '../../core/types';
-import { classInfo, isContainer } from '../../core/classes';
+import { classInfo, isContainer, SCRIPT_CLASSES } from '../../core/classes';
 import { iconForClass, Icon } from '../../ui/Icons';
 import { BottomSheet } from '../../ui/BottomSheet';
 import { InsertMenu } from './InsertMenu';
@@ -24,7 +24,7 @@ interface PickerState {
   id: InstanceId | null;
 }
 
-export function Explorer({ onInsert, compact }: { onInsert: (parentId: InstanceId) => void; compact?: boolean }) {
+export function Explorer({ onInsert, onEditScript, compact }: { onInsert: (parentId: InstanceId) => void; onEditScript?: (id: InstanceId) => void; compact?: boolean }) {
   const project = useStore(s => s.project);
   const selection = useStore(s => s.selection);
   const expanded = useStore(s => s.expanded);
@@ -225,6 +225,11 @@ export function Explorer({ onInsert, compact }: { onInsert: (parentId: InstanceI
             <button className="action" onClick={() => { setSheetFor(null); beginRename(sheetInst.id); }}>
               <Icon name="pen" /> Renomear
             </button>
+            {SCRIPT_CLASSES.includes(sheetInst.className) && onEditScript && (
+              <button className="action" onClick={() => { setSheetFor(null); onEditScript(sheetInst.id); }}>
+                <Icon name="script" /> Editar código
+              </button>
+            )}
             <button className="action" onClick={() => { duplicateInstances([sheetInst.id]); setSheetFor(null); }}>
               <Icon name="copy" /> Duplicar
             </button>
