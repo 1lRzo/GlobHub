@@ -18,7 +18,7 @@ export function findNearestPartPositionFor(project: Project, inst: RbxInstance):
       let offsetX = 0, offsetY = 0, offsetZ = 0;
       let walk: InstanceId | null = inst.id;
       while (walk && walk !== node.id) {
-        const mid = project.instances[walk];
+        const mid: RbxInstance | undefined = project.instances[walk];
         if (mid?.className === 'Attachment' && mid.properties.Position) {
           const off = mid.properties.Position as Vec3;
           offsetX += off.x; offsetY += off.y; offsetZ += off.z;
@@ -44,7 +44,7 @@ export function findNearestPartPositionFor(project: Project, inst: RbxInstance):
         let walk: InstanceId | null = id;
         let dx = 0, dy = 0, dz = 0;
         while (walk && walk !== search.id) {
-          const mid = project.instances[walk];
+          const mid: RbxInstance | undefined = project.instances[walk];
           if (mid?.className === 'Attachment' && mid.properties.Position) {
             dx += (mid.properties.Position as Vec3).x;
             dy += (mid.properties.Position as Vec3).y;

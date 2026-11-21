@@ -1,4 +1,4 @@
-import { InstanceId, Project, PropertyValue, RbxInstance } from './types';
+import { InstanceId, Project, ProjectMeta, PropertyValue, RbxInstance } from './types';
 import { newId } from './ids';
 import { createInstance } from './tree';
 import { NodeSpec, templateById } from './templates';

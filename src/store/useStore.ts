@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { InstanceId, Project, PropertyValue, RbxInstance, ToolMode, TransformPayload, Vec3 } from '../core/types';
+import { InstanceId, Project, ProjectMeta, PropertyValue, RbxInstance, ToolMode, TransformPayload, Vec3 } from '../core/types';
 import { instantiateProject, metaFromProject } from '../core/project';
 import { deserializeProject } from '../core/serialize';
 import { createInstance, isDescendantOf, removeSubtree, cloneSubtree } from '../core/tree';

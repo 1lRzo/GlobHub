@@ -33,7 +33,8 @@ function trussGeometry(): THREE.BufferGeometry {
   const geo = new THREE.BoxGeometry(1, 1, 1);
   const wire = new THREE.WireframeGeometry(geo);
   const out = new THREE.BufferGeometry();
-  out.setAttribute('position', new THREE.Float32BufferAttribute((wire.getAttribute('position') as THREE.BufferAttribute).array as number[], 3));
+  const wirePos = (wire.getAttribute('position') as THREE.BufferAttribute).array;
+  out.setAttribute('position', new THREE.BufferAttribute(new Float32Array(wirePos), 3));
   return out;
 }
 
