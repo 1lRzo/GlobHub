@@ -5,13 +5,6 @@ import { InstanceId, Project, RbxInstance, ToolMode, TransformPayload } from '..
 import { AUX_COLORS, MATERIAL_LOOK, PART_CLASSES } from '../core/classes';
 import { findNearestPartPositionFor } from '../core/partLookup';
 
-const GEO_KEY_PART: Record<string, string> = {};
-for (const c of PART_CLASSES) GEO_KEY_PART[c] = 'part';
-void GEO_KEY_PART;
-
-const GEO_KEY_PART: Record<string, string> = {};
-for (const c of PART_CLASSES) GEO_KEY_PART[c] = 'part';
-
 function wedgeGeometry(): THREE.BufferGeometry {
   const h = 0.5;
   const vertices: number[] = [];
