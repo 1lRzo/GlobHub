@@ -48,6 +48,7 @@ export function Icon({ name, size = 18 }: IconProps) {
     plus: <path d="M12 5v14M5 12h14" />,
     search: <><circle cx="11" cy="11" r="6.5" /><path d="M16 16l5 5" /></>,
     eye: <><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z" /><circle cx="12" cy="12" r="2.6" /></>,
+    spark: <path d="M12 3l2 5.5L19.5 10 14 12l-2 5.5L10 12 4.5 10 10 8.5 12 3Zm7 8.5L20 14l2.5 1-2.5 1-1 2.5-1-2.5L15.5 15l2.5-1 1-2.5Z" />,
     group: <><rect x="3" y="3" width="8" height="8" rx="1.5" /><rect x="13" y="13" width="8" height="8" rx="1.5" /><path d="M13 7h3.5A1.5 1.5 0 0 1 18 8.5V11M8.5 18H7a1.5 1.5 0 0 1-1.5-1.5V13" /></>
   };
   return <svg {...common}>{paths[name] ?? paths.cube}</svg>;
