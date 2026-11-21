@@ -1,6 +1,6 @@
 import { Icon } from '../../ui/Icons';
 
-export type MobilePanel = 'explorer' | 'insert' | 'tools' | 'properties' | 'code' | 'pick-script' | 'project' | null;
+export type MobilePanel = 'explorer' | 'insert' | 'tools' | 'properties' | 'code' | 'pick-script' | 'project' | 'ai' | null;
 
 interface MobileNavProps {
   active: MobilePanel;
@@ -14,6 +14,7 @@ const ITEMS: { id: Exclude<MobilePanel, null>; icon: string; label: string }[] =
   { id: 'code', icon: 'script', label: 'Código' },
   { id: 'properties', icon: 'sliders', label: 'Props' },
   { id: 'tools', icon: 'wrench', label: 'Ferramentas' },
+  { id: 'ai', icon: 'spark', label: 'IA' },
   { id: 'project', icon: 'gamepad', label: 'Projeto' }
 ];
 

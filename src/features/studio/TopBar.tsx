@@ -9,6 +9,7 @@ interface TopBarProps {
   onExport: () => void;
   onSave: () => void;
   onMenu: () => void;
+  onAi: () => void;
   isMobile: boolean;
 }
 
@@ -19,7 +20,7 @@ const TOOL_ICON: Record<ToolMode, string> = {
   scale: 'scale'
 };
 
-export function TopBar({ onUndo, onRedo, onHome, onExport, onSave, onMenu, isMobile }: TopBarProps) {
+export function TopBar({ onUndo, onRedo, onHome, onExport, onSave, onMenu, onAi, isMobile }: TopBarProps) {
   const project = useStore(s => s.project);
   const saveState = useStore(s => s.saveState);
   const tool = useStore(s => s.tool);
@@ -53,6 +54,9 @@ export function TopBar({ onUndo, onRedo, onHome, onExport, onSave, onMenu, isMob
         </div>
       )}
       <div className="topbar-actions">
+        <button className="btn-ghost ai-btn" onClick={onAi} aria-label="Abrir IA" title="IA · Agente de desenvolvimento">
+          <Icon name="spark" size={18} />
+        </button>
         <button className="btn-ghost" onClick={onUndo} disabled={!canUndo} aria-label="Desfazer" title="Desfazer (Ctrl+Z)">
           <Icon name="undo" size={18} />
         </button>

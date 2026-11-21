@@ -8,6 +8,7 @@ import { MobileNav, MobilePanel } from './MobileNav';
 import { Explorer } from './Explorer';
 import { Properties } from './Properties';
 import { InsertMenu } from './InsertMenu';
+import { AiPanel } from '../ai/AiPanel';
 import { ScriptArea } from '../scripting/ScriptArea';
 import { InstanceId, ToolMode } from '../../core/types';
 import { SCRIPT_CLASSES } from '../../core/classes';
@@ -130,6 +131,14 @@ export function Studio({ onHome }: { onHome: () => void }) {
     setPanel('insert');
   };
 
+  const aiSheet = (
+    <BottomSheet open={panel === 'ai'} title="IA · Agente de desenvolvimento" onClose={() => setPanel(null)} full>
+      <div className="sheet-tall ai-sheet">
+        <AiPanel />
+      </div>
+    </BottomSheet>
+  );
+
   const projectSheet = (
     <BottomSheet open={panel === 'project'} title="Projeto" onClose={() => setPanel(null)}>
       <div className="actions-list">
@@ -166,6 +175,7 @@ export function Studio({ onHome }: { onHome: () => void }) {
         onSave={saveNow}
         onExport={exportCurrentProject}
         onMenu={() => setPanel('project')}
+        onAi={() => setPanel('ai')}
       />
       <div className="studio-body">
         {!isMobile && (
@@ -262,6 +272,7 @@ export function Studio({ onHome }: { onHome: () => void }) {
             </div>
           </BottomSheet>
           {projectSheet}
+          {aiSheet}
         </>
       )}
 
