@@ -58,6 +58,6 @@ O deploy para GitHub Pages acontece automaticamente na branch `main` (habilitar 
 
 ## Limitações honestas desta etapa
 
-- O editor de código valida e destaca a estrutura, mas **não executa Luau**: a execução real acontece dentro do motor do Roblox. A interpretação de scripts no navegador chegará com o ambiente de testes da Etapa 5, e até lá fica claro no app quando algo é simulação do editor.
+- O editor de código valida e destaca a estrutura, mas **não executa Luau**: a execução real acontece dentro do motor do Roblox. A interpretação de scripts no navegador chegará com o ambiente de testes da Etapa 5, e até lá o app deixa claro quando algo é simulação do editor.
 - A exportação no formato `.rbxlx` e a publicação via Roblox Open Cloud chegam na Etapa 5, com backend próprio para guardar credenciais com segurança (nenhuma chave fica no frontend).
 - Física em tempo real (simulação no viewport), terreno esculpível e multiplayer pertencem às etapas seguintes; as propriedades correspondentes já existem no modelo de dados.
