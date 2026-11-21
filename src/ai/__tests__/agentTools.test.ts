@@ -4,6 +4,17 @@ import { resolveParent, resolvePath, pathOf, AGENT_TOOLS } from '../tools';
 import { executeToolForTest, agentSend, getSettings } from '../agent';
 import { useStore } from '../../store/useStore';
 
+// O Vitest roda neste projeto em ambiente node (sem DOM). As configurações do
+// agente usam localStorage no navegador; aqui instalamos um stub seguro para
+// os testes rodarem sem depender de jsdom.
+const memoryStore = new Map<string, string>();
+(globalThis as { localStorage?: unknown }).localStorage ??= {
+  clear: () => memoryStore.clear(),
+  getItem: (k: string) => memoryStore.get(k) ?? null,
+  setItem: (k: string, v: string) => { memoryStore.set(String(k), String(v)); },
+  removeItem: (k: string) => { memoryStore.delete(k); }
+};
+
 function resetWithProject() {
   localStorage.clear();
   useStore.getState().createProject('Projeto Teste', 'vazio');
