@@ -268,9 +268,11 @@ export function validateLuau(source: string): LuauIssue[] {
   }
 
   // 5. avisos úteis
-  for (const tok of tokens) {
-    if (tok.type === 'ident' && tok.value === 'wait' && tok.line >= 0) {
-      // aviso leve, comum em código novo
+  for (let t = 0; t < tokens.length; t++) {
+    const tok = tokens[t];
+    if ((tok.type === 'ident' || tok.type === 'global') && tok.value === 'wait') {
+      const prev = tokens[t - 1];
+      if (prev && prev.type === 'operator' && prev.value === '.') continue; // task.wait
       issues.push({ severity: 'warning', message: `'wait' é obsoleto; prefira 'task.wait()'.`, line: tok.line });
     }
   }

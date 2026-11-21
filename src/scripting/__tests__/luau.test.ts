@@ -25,10 +25,11 @@ describe('tokenizador Luau', () => {
   });
 
   it('numera linhas corretamente', () => {
-    const src = 'local a = 1\nlocal b = 2\n\nlocal c = 3\n';
+    const src = 'local a = 1\nlocal b = 2\n\nlocal c = 3';
     const tokens = tokenizeLuau(src);
-    const lastKeyword = tokens[tokens.length - 1];
-    expect(lastKeyword.line).toBe(4);
+    const numbers = tokens.filter(t => t.type === 'number');
+    expect(numbers).toHaveLength(3);
+    expect(numbers[2].line).toBe(4);
   });
 });
 
@@ -63,6 +64,8 @@ describe('validação Luau', () => {
   it('avisa sobre task.wait preferível a wait', () => {
     const src = 'while true do\n\twait(1)\nend\n';
     expect(validateLuau(src).some(i => i.severity === 'warning' && i.message.includes('task.wait'))).toBe(true);
+    const ok = 'while true do\n\ttask.wait(1)\nend\n';
+    expect(validateLuau(ok).some(i => i.message.includes('task.wait'))).toBe(false);
   });
 });
 
