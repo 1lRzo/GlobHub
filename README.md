@@ -1,2 +1,0 @@
-# GlobHub
-Ok
