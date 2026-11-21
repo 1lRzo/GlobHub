@@ -91,6 +91,10 @@ const CLASS_INFO: Record<string, ClassInfo> = {
   },
   SoundService: { label: 'SoundService', category: 'Serviço', container: true, hasSource: false, propertyDefs: [], defaultProps: {} },
   Terrain: { label: 'Terrain', category: 'Serviço', container: false, hasSource: false, propertyDefs: [], defaultProps: {} },
+  Camera: {
+    label: 'Camera', category: 'Serviço', container: false, hasSource: false, propertyDefs: [],
+    defaultProps: {}
+  },
 
   Part: {
     label: 'Part', category: 'Básico', container: false, hasSource: false,

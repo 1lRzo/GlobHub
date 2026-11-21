@@ -34,11 +34,5 @@ export function Viewport() {
     apiRef.current?.sync(project, selection, tool);
   }, [project, selection, tool]);
 
-  useEffect(() => {
-    if (apiRef.current && selection.length === 1) {
-      apiRef.current.focus(selection[0]);
-    }
-  }, [selection]);
-
   return <div className="viewport-wrap" ref={mountRef} aria-label="Visualização 3D" />;
 }
