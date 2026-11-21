@@ -102,14 +102,15 @@ describe('ferramentas do agente', () => {
   it('groupChildren agrupa os filhos em um Model', () => {
     const state = useStore.getState();
     const ws = resolveParent(state.project!, 'Workspace')!;
-    const a = state.addInstance('Part', ws.id, {}) as string;
-    const b = state.addInstance('Part', ws.id, {}) as string;
-    useStore.getState().updateInstance(a, { name: 'Um' });
-    useStore.getState().updateInstance(b, { name: 'Dois' });
-    const fresh = useStore.getState();
-    fresh.groupChildren(ws.id, 'Lote');
-    const wsAfter = useStore.getState().project!.instances[ws.id];
-    const modelId = wsAfter.children.find(cid => useStore.getState().project!.instances[cid]?.name === 'Lote');
+    const folderId = state.addInstance('Folder', ws.id, {}) as string;
+    useStore.getState().updateInstance(folderId, { name: 'Alvo' });
+    // o Workspace já tem Terrain e Camera; usamos uma pasta isolada para o agrupamento
+    const a = state.addInstance('Part', folderId, {}) as string;
+    const b = state.addInstance('Part', folderId, {}) as string;
+    expect(useStore.getState().project!.instances[folderId]!.children.sort()).toEqual([a, b].sort());
+    useStore.getState().groupChildren(folderId, 'Lote');
+    const folderAfter = useStore.getState().project!.instances[folderId];
+    const modelId = folderAfter.children.find(cid => useStore.getState().project!.instances[cid]?.name === 'Lote');
     expect(modelId).toBeDefined();
     const model = useStore.getState().project!.instances[modelId!];
     expect(model.className).toBe('Model');
