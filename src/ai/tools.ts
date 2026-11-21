@@ -27,7 +27,7 @@ export function resolvePath(project: Project, path: string): RbxInstance | null 
   for (let i = 0; i < parts.length; i++) {
     const part = parts[i].toLowerCase();
     if (i === 0) {
-      const service = root.children
+      const service: RbxInstance | undefined = root.children
         .map(id => project.instances[id])
         .find(s => s && (s.name.toLowerCase() === part || s.className.toLowerCase() === part));
       if (!service) return null;
@@ -35,7 +35,7 @@ export function resolvePath(project: Project, path: string): RbxInstance | null 
       continue;
     }
     if (!cur) return null;
-    const child = cur.children
+    const child: RbxInstance | undefined = cur.children
       .map(id => project.instances[id])
       .find(c => c && (c.name.toLowerCase() === part || c.className.toLowerCase() === part));
     if (!child) return null;
@@ -387,8 +387,16 @@ function groupChildrenTool(args: Record<string, unknown>): AgentToolResult {
     if (parent.children.length < 1) return fail('Não há filhos para agrupar.');
     state.groupChildren(parent.id, name);
     const projectAfter = useStore.getState().project;
-    const parentAfter = projectAfter ? projectAfter.instances[parent.id] : null;
-    const modelChild = parentAfter ? (parentAfter.children.find(cid => projectAfter.instances[cid]?.className === 'Model') ?? null) : null;
+    let modelChild: InstanceId | null = null;
+    if (projectAfter) {
+      const parentAfter = projectAfter.instances[parent.id];
+      if (parentAfter) {
+        for (const cid of parentAfter.children) {
+          const candidate = projectAfter.instances[cid];
+          if (candidate && candidate.className === 'Model') { modelChild = cid; break; }
+        }
+      }
+    }
     return { ok: true, message: `${name}: filhos agrupados em um Model.`, affectedIds: modelChild ? [modelChild] : undefined };
   } catch (e) { return fail(String(e instanceof Error ? e.message : e)); }
 }
