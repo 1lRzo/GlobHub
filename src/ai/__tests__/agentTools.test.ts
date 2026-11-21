@@ -34,10 +34,11 @@ describe('resolver caminhos da hierarquia', () => {
   it('resolve caminhos aninhados com resolveParent', () => {
     const state = useStore.getState();
     const ws = resolveParent(state.project!, 'Workspace')!;
-    const folderId = state.addInstance('Folder', ws.id, {});
-    state.updateInstance(folderId!, { name: 'Map' });
-    expect(state.project!.instances['Workspace'] ?? null).toBeDefined();
-    expect(resolveParent(state.project!, 'Workspace/Map')!.id).toBe(folderId);
+    const folderId = state.addInstance('Folder', ws.id, {}) as string;
+    useStore.getState().updateInstance(folderId, { name: 'Map' });
+    const fresh = useStore.getState().project!;
+    expect(fresh.instances[folderId]).toBeDefined();
+    expect(resolveParent(fresh, 'Workspace/Map')!.id).toBe(folderId);
   });
 
   it('pathOf ignora a raiz DataModel', () => {
@@ -80,7 +81,7 @@ describe('ferramentas do agente', () => {
     const state = useStore.getState();
     const ws = resolveParent(state.project!, 'Workspace')!;
     const folderId = state.addInstance('Folder', ws.id, {}) as string;
-    state.updateInstance(folderId, { name: 'Alvo' });
+    useStore.getState().updateInstance(folderId, { name: 'Alvo' });
     state.addInstance('Part', folderId, {});
 
     const first = executeToolForTest('delete_objects', { path: 'Workspace/Alvo' });
@@ -98,6 +99,23 @@ describe('ferramentas do agente', () => {
     expect(good.ok).toBe(true);
   });
 
+  it('groupChildren agrupa os filhos em um Model', () => {
+    const state = useStore.getState();
+    const ws = resolveParent(state.project!, 'Workspace')!;
+    const a = state.addInstance('Part', ws.id, {}) as string;
+    const b = state.addInstance('Part', ws.id, {}) as string;
+    useStore.getState().updateInstance(a, { name: 'Um' });
+    useStore.getState().updateInstance(b, { name: 'Dois' });
+    const fresh = useStore.getState();
+    fresh.groupChildren(ws.id, 'Lote');
+    const wsAfter = useStore.getState().project!.instances[ws.id];
+    const modelId = wsAfter.children.find(cid => useStore.getState().project!.instances[cid]?.name === 'Lote');
+    expect(modelId).toBeDefined();
+    const model = useStore.getState().project!.instances[modelId!];
+    expect(model.className).toBe('Model');
+    expect(model.children.sort()).toEqual([a, b].sort());
+  });
+
   it('registro expõe todas as ferramentas com nome e descrição', () => {
     expect(AGENT_TOOLS.length).toBeGreaterThanOrEqual(16);
     for (const tool of AGENT_TOOLS) {
@@ -113,10 +131,18 @@ describe('modo local (sem chave de API)', () => {
 
   it('agente local responde a comandos diretos', async () => {
     expect(getSettings().apiKey).toBe('');
-    useStore.getState().pushAiMessage('system', 'CONFIRME:Excluir "Workspace/Lixo".');
+    const store = useStore.getState();
+    store.pushAiMessage('system', 'CONFIRME:Excluir "Workspace/Lixo".');
     expect(useStore.getState().aiMessages.some(m => m.text.startsWith('CONFIRME:'))).toBe(true);
     await agentSend('resumo do projeto');
     const msgs = useStore.getState().aiMessages;
     expect(msgs.some(m => m.role === 'agent')).toBe(true);
+  });
+
+  it('clearAiMessages zera a conversa', () => {
+    const store = useStore.getState();
+    store.pushAiMessage('user', 'olá');
+    useStore.getState().clearAiMessages();
+    expect(useStore.getState().aiMessages.length).toBe(0);
   });
 });

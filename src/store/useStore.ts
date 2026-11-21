@@ -5,6 +5,7 @@ import { deserializeProject } from '../core/serialize';
 import { createInstance, isDescendantOf, removeSubtree, cloneSubtree } from '../core/tree';
 import { isContainer } from '../core/classes';
 import { newId } from '../core/ids';
+import { AiMessage } from '../ai/types';
 import { deleteProjectData, downloadProjectFile, listProjectMetas, loadProjectData, saveProjectData } from './storage';
 
 const UNDO_LIMIT = 60;
@@ -24,6 +25,8 @@ interface StudioState {
   saveState: SaveState;
   lastCoalesce: { key: string; time: number } | null;
   toast: string | null;
+  /** Conversa com o agente de IA (limpa ao limpar a conversa; não participa de undo). */
+  aiMessages: AiMessage[];
 
   refreshProjects(): void;
   createProject(name: string, templateId: string): string;
@@ -49,6 +52,9 @@ interface StudioState {
   groupSelection(): void;
   ungroup(id: InstanceId): void;
   setInstanceSource(id: InstanceId, source: string): void;
+  groupChildren(parentId: InstanceId, name: string): void;
+  pushAiMessage(role: AiMessage['role'], text: string, actions?: string[]): void;
+  clearAiMessages(): void;
 
   beginTransformForSelection(): void;
   commitTransform(id: InstanceId, transform: TransformPayload): void;
@@ -148,6 +154,7 @@ export const useStore = create<StudioState>((set, get) => {
     saveState: 'saved',
     lastCoalesce: null,
     toast: null,
+    aiMessages: [],
 
     refreshProjects() {
       set({ projects: listProjectMetas() });
@@ -407,6 +414,40 @@ export const useStore = create<StudioState>((set, get) => {
         removeSubtree(p, id);
       });
       set({ selection: members.filter(mid => !!get().project?.instances[mid]) });
+    },
+
+    groupChildren(parentId, name) {
+      const state = get();
+      if (!state.project) return;
+      const parent = state.project.instances[parentId];
+      if (!parent || parent.children.length < 1) return;
+      const children = [...parent.children];
+      const modelId = newId();
+      const modelInst = createInstance('Model', name);
+      modelInst.id = modelId;
+      modelInst.parent = parentId;
+      mutateProject(p => {
+        p.instances[modelId] = modelInst;
+        p.instances[parentId].children.push(modelId);
+        for (const cid of children) {
+          const inst = p.instances[cid];
+          if (!inst) continue;
+          p.instances[parentId].children = p.instances[parentId].children.filter(c => c !== cid);
+          inst.parent = modelId;
+          p.instances[modelId].children.push(cid);
+        }
+      });
+      set(s => ({ selection: [modelId], expanded: { ...s.expanded, [modelId]: true } }));
+    },
+
+    pushAiMessage(role, text, actions) {
+      const msg: AiMessage = { id: newId(), role, text, ts: Date.now() };
+      if (actions && actions.length > 0) msg.actions = actions;
+      set(s => ({ aiMessages: [...s.aiMessages, msg].slice(-200) }));
+    },
+
+    clearAiMessages() {
+      set({ aiMessages: [] });
     },
 
     setInstanceSource(id, source) {
