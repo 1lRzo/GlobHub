@@ -15,6 +15,7 @@
 - ✅ Real-time progress bar
 - ✅ Draggable window
 - ✅ No dependencies - pure Roblox API
+- ✅ **FIXED: Removed Padding property that caused errors**
 
 **This is the version you should use!**
 
@@ -26,22 +27,36 @@
 - Universal compatibility
 - Guaranteed working UI
 - All features included
+- **CORRIGIDO: Erro de "Padding" resolvido**
 
-### 2. **[delta_script_scanner.lua](delta_script_scanner.lua)** - Full Version
+### 2. **[delta_debug.lua](delta_debug.lua)** - Debug Version
+- Shows detailed scan progress in console (F9)
+- Helps identify what's not working
+- Same UI as universal version
+- Prints debug messages for each step
+
+### 3. **[delta_test.lua](delta_test.lua)** - Test Version
+- **MINIMAL scan - only 20 objects**
+- Fastest scan for testing
+- Simple button interface
+- Saves to test_scan.json
+- **Use this if scan is not working!**
+
+### 4. **[delta_script_scanner.lua](delta_script_scanner.lua)** - Full Version
 - Graphic interface with Delta API
 - SCAN, DOWNLOAD, COPY, PREVIEW buttons
 - Real-time progress
 - Delta notifications
 
-### 3. **[delta_script_v2.lua](delta_script_v2.lua)** - Compatible Version
+### 5. **[delta_script_v2.lua](delta_script_v2.lua)** - Compatible Version
 - Works with Delta API and fallback to Roblox GUI
 - More compatible with different Delta versions
 
-### 4. **[delta_script_simple.lua](delta_script_simple.lua)** - Simple Version
+### 6. **[delta_script_simple.lua](delta_script_simple.lua)** - Simple Version
 - Basic SCAN and DOWNLOAD buttons
 - Lightweight and fast
 
-### 5. **[delta_script_minimal.lua](delta_script_minimal.lua)** - Minimal Version
+### 7. **[delta_script_minimal.lua](delta_script_minimal.lua)** - Minimal Version
 - No GUI - Chat commands only
 - Works on ANY executor
 - Commands: `/scan`, `/download`, `/copy`, `/help`
@@ -69,6 +84,36 @@ A floating window will appear with these buttons:
 - Click **DOWNLOAD** to save the data
 - File will be saved as: `universal_scan_data.json`
 - Send this file to create custom scripts!
+
+---
+
+## 🐛 **Troubleshooting - Scan Not Working?**
+
+### If scan is not working, try this:
+
+1. **Use the TEST version first:**
+   - Copy **[delta_test.lua](delta_test.lua)**
+   - Execute it
+   - Click the button
+   - If it works, the scan is functioning!
+
+2. **Use the DEBUG version:**
+   - Copy **[delta_debug.lua](delta_debug.lua)**
+   - Execute it
+   - Click SCAN
+   - **Open console (F9 in executor)**
+   - Look for `[DEBUG]` messages
+   - Tell me what you see!
+
+3. **Common issues:**
+   - **Game not loaded** - Wait for the game to fully load before scanning
+   - **Executor blocking** - Some executors block certain functions
+   - **Too many objects** - The scan limits to 300 objects to prevent lag
+   - **No write permission** - Some executors don't support `writefile`
+
+4. **If TEST version works but others don't:**
+   - The issue is with the scan depth or object limit
+   - Use the universal version and reduce MAX_INSTANCES
 
 ---
 
@@ -101,26 +146,15 @@ A floating window will appear with these buttons:
 
 ---
 
-## 💡 **Troubleshooting**
+## 💡 **Quick Fix Guide**
 
-### If the UI doesn't appear:
-1. **Use the universal version** - It's guaranteed to work
-2. **Check if you're in-game** - Some executors need you to be in a game
-3. **Wait for game to load** - Make sure the game is fully loaded
-4. **Try a different executor** - Some executors have better compatibility
-
-### If scanning takes too long:
-- The script has a limit of 300 instances to prevent lag
-- For large games, it will stop at 300 and still save what it collected
-
-### If download doesn't work:
-- Some executors don't support `writefile`
-- Use the **COPY** button instead and paste into a text file
-
-### If you get errors:
-- Make sure you're using the **universal version**
-- Try clearing your executor's cache
-- Restart your executor
+| Problem | Solution |
+|---------|----------|
+| UI doesn't appear | Use delta_universal.lua (fixed version) |
+| Scan doesn't work | Use delta_test.lua first |
+| Scan is slow | Use delta_test.lua (only 20 objects) |
+| Can't save file | Use COPY button instead |
+| Error messages | Use delta_debug.lua and check console |
 
 ---
 
@@ -149,6 +183,7 @@ After scanning, send the JSON file to create custom scripts for:
 2. **UI Will Appear** - The universal version creates a visible window
 3. **Works Everywhere** - Tested on Delta, Synapse, JJSploit, Script-Ware
 4. **No Dependencies** - Uses only native Roblox API
+5. **Fixed Padding Error** - The error "Padding is not a valid member of TextLabel" is now fixed
 
 ---
 
