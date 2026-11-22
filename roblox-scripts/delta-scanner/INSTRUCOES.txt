@@ -1,0 +1,50 @@
+=================================================================
+INSTRUÇÕES PARA USAR O SCRIPT DE SCAN NO DELTA EXECUTOR
+=================================================================
+
+1. COMO USAR:
+   - Abra o Roblox e entre no jogo que deseja escanear
+   - Abra o executor Delta (F9 ou o atalho do seu executor)
+   - Copie TODO o código do arquivo "delta_script_scanner.lua"
+   - Cole no executor e execute
+
+2. FUNCIONALIDADES:
+   
+   🔍 BOTÃO SCAN:
+   - Escaneia todo o jogo (Workspace, Lighting, ReplicatedStorage, etc.)
+   - Coleta informações de todas as instâncias importantes
+   - Inclui scripts, modelos, partes, accessories, sons, etc.
+   - Mostra progresso em tempo real
+   
+   ⬇️ BOTÃO DOWNLOAD:
+   - Salva todos os dados escaneados em um arquivo JSON
+   - Arquivo é salvo como "game_scan_data.json"
+   - Você pode enviar este arquivo para eu criar um script melhor
+   
+   📋 BOTÃO COPY:
+   - Copia os dados para a área de transferência
+   - Útil para colar em um chat ou documento
+   
+   👁️ BOTÃO PREVIEW:
+   - Mostra um resumo dos dados escaneados
+   - Útil para verificar o que foi coletado
+
+3. O QUE É COLETADO:
+   - Informações do jogo (nome, ID, criador, etc.)
+   - Todas as instâncias importantes de todos os serviços
+   - Propriedades importantes (Position, Size, Color, etc.)
+   - Conteúdo de scripts (Source)
+   - Informações dos jogadores
+   - E muito mais!
+
+4. DEPOIS DE ESCANEAR:
+   - Clique em DOWNLOAD para salvar o arquivo
+   - Envie o arquivo "game_scan_data.json" para mim
+   - Eu vou usar essas informações para criar um script personalizado
+
+5. NOTAS:
+   - O scan pode demorar em jogos grandes
+   - O script tem limite de 1000 instâncias para evitar lag
+   - Se o jogo tiver proteção anti-exploit, pode não funcionar
+
+=================================================================
