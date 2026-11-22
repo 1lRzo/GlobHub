@@ -1,5 +1,5 @@
 --[[
-SCRIPT UNIVERSAL PARA QUALQUER EXECUTOR ROBLOX
+SCRIPT UNIVERSAL PARA QUALQUER EXECUTOR ROBLOX - VERSÃO CORRIGIDA
 Funciona em: Delta, Synapse X, JJSploit, Script-Ware, etc.
 
 Criado por: Vibe Code (Mistral AI)
@@ -8,7 +8,9 @@ FUNCIONALIDADES:
 - Botão SCAN: Escaneia o jogo
 - Botão DOWNLOAD: Salva dados em JSON
 - Botão COPY: Copia para clipboard
+- Botão CLEAR: Limpa dados
 - Interface aparece com CERTEZA
+- CORRIGIDO: Removido uso de "Padding" que causava erro
 ]]
 
 -- ============================================
@@ -79,14 +81,14 @@ local function createMainWindow()
     -- Título
     local title = Instance.new("TextLabel")
     title.Name = "Title"
-    title.Size = UDim2.new(1, 0, 1, 0)
+    title.Size = UDim2.new(1, -10, 1, 0)
+    title.Position = UDim2.new(0, 10, 0, 0)
     title.BackgroundTransparency = 1
     title.Text = "🎮 Roblox Game Scanner"
     title.TextColor3 = Color3.fromRGB(0, 170, 255)
     title.TextSize = 16
     title.Font = Enum.Font.GothamBold
     title.TextXAlignment = Enum.TextXAlignment.Left
-    title.Padding = UDim.new(0, 15, 0, 0)
     title.Parent = titleBar
     
     -- Botão fechar
@@ -592,7 +594,7 @@ end)
 -- Notificação inicial
 notify("🎮 Game Scanner", "Script carregado!\nClique em SCAN para começar.", 5)
 
-print("✅ Universal Scanner carregado com sucesso!")
+print("✅ Universal Scanner CORRIGIDO carregado com sucesso!")
 print("📊 Interface criada - verifique na tela!")
 
 -- Retornar funções para execução manual
